@@ -130,3 +130,7 @@ dmypy.json
 
 #local file metadata
 .DS_store
+.idea
+.idea*
+IGND/out
+IGND/out*

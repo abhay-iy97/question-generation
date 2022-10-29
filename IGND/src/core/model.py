@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
-from .models.seq2seq import Seq2Seq
+#from .models.seq2seq import Seq2Seq
 from .models.graph2seq import Graph2Seq
 from .utils.vocab_utils import VocabModel
 from .utils import constants as Constants
@@ -23,7 +23,8 @@ class Model(object):
         if config['model_name'] == 'graph2seq':
             self.net_module = Graph2Seq
         elif config['model_name'] == 'seq2seq':
-            self.net_module = Seq2Seq
+            #self.net_module = Seq2Seq #TODO: figure out what to do with this
+            self.net_module = Graph2Seq
         else:
             raise RuntimeError('Unknown model_name: {}'.format(config['model_name']))
         print('[ Running {} model ]'.format(config['model_name']))
