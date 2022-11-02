@@ -1,8 +1,8 @@
 # Data
-dataset_name: 'squad-split2'
-trainset: '../data/squad-split2/train_sent_pre.v5.json'
-devset: '../data/squad-split2/dev_sent_pre.v5.json'
-testset: '../data/squad-split2/test_sent_pre.v5.json'
+dataset_name: 'squad'
+trainset: '../../dataset/squad_train-v1.1_processed.json'
+devset: '../../dataset/squad_dev-v1.1_processed.json'
+testset: '../../dataset/squad_dev-v1.1_processed.json'
 pretrained_word_embed_file: null
 wmd_emb_file: '../data/squad-split2/glove_vectors.w2v'
 saved_vocab_file: '../data/squad-split2/vocab_model_70k'

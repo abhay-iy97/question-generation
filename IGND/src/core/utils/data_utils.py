@@ -134,6 +134,8 @@ def vectorize_input(batch, config, bert_model, training=True, device=None):
 
 def prepare_datasets(config):
     if config['trainset'] is not None:
+        import os
+        print(os.getcwd())
         train_set, train_src_len, train_tgt_len, train_ans_len = read_all_GenerationDatasets(config['trainset'], isLower=True)
         print('# of training examples: {}'.format(len(train_set)))
         print('Training source sentence length: {}'.format(train_src_len))
@@ -583,8 +585,9 @@ class OOVDict(object):
         self.ext_vocab_size = max(self.ext_vocab_size, index + 1)
         return index
 
-
+import nltk
 from nltk.corpus import stopwords
+nltk.download('stopwords', quiet=True)
 stopWords = set(stopwords.words('english'))
 def is_copied(word, target):
     if word in target and word not in stopWords:
