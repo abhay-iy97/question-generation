@@ -1,17 +1,17 @@
 # Data
-dataset_name: 'squad'
-trainset: '/home/sahilravu213/question-generation-fork/IGND/src/dataset/squad_train-v1.1_processed.json'
-devset: '/home/sahilravu213/question-generation-fork/IGND/src/dataset/squad_dev-v1.1_processed.json'
-testset: '/home/sahilravu213/question-generation-fork/IGND/src/dataset/squad_dev-v1.1_processed.json'
+dataset_name: squad
+
+trainset: ./dataset/train-v1.1-processed.json
+devset: ./dataset/dev-v1.1-processed.json
+testset: ./dataset/dev-v1.1-processed.json
 # pretrained_word_embed_file: null
-wmd_emb_file: '../data/squad-split2/glove_vectors.w2v'
-saved_vocab_file: '/home/sahilravu213/question-generation-fork/IGND/src/dataset/squad/vocab_model_70k.bin'
+wmd_emb_file: ../data/squad-split2/glove_vectors.w2v
+saved_vocab_file: ./dataset/squad/vocab_model_70k.bin
 # pretrained: '../out/squad-split2/graph2seq_static_bert_finetune_rl_fixed_ratio_0.99_lr_0.00001_new_new.json'
 pretrained: null
 
 # Output
-out_dir: 'home/sahilravu213/question-generation-fork/IGND/src/dataset/squad'
-
+out_dir: ./dataset/squad
 
 
 nll_type_sum: False
