@@ -58,7 +58,7 @@ if __name__ == '__main__':
     args = vars(parser.parse_args())
 
     with open(args['input']) as dataset_file:
-        dataset = json.load(dataset_file, encoding='utf-8')
+        dataset = json.load(dataset_file)
 
         all_instances = []
         for instance in tqdm(dataset):

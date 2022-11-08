@@ -12,6 +12,7 @@ import numpy as np
 from scipy.sparse import *
 from collections import Counter, defaultdict
 from .timer import Timer
+from tqdm import tqdm
 
 from .bert_utils import *
 from . import padding_utils
@@ -167,7 +168,7 @@ def prepare_datasets(config):
 
 def read_all_GenerationDatasets(inpath, isLower=True):
     with open(inpath) as dataset_file:
-        dataset = json.load(dataset_file, encoding='utf-8')
+        dataset = json.load(dataset_file)
     all_instances = []
     src_len = []
     tgt_len = []
@@ -227,7 +228,7 @@ class QADataStream(object):
         # distribute questions into different buckets
         batch_spans = padding_utils.make_batches(self.num_instances, batch_size)
         self.batches = []
-        for batch_index, (batch_start, batch_end) in enumerate(batch_spans):
+        for batch_index, (batch_start, batch_end) in tqdm(enumerate(batch_spans)):
             cur_instances = all_instances[batch_start: batch_end]
             cur_batch = QAQuestionBatch(cur_instances, config, word_vocab, edge_vocab,
                     POS_vocab=POS_vocab, NER_vocab=NER_vocab, ext_vocab=ext_vocab, bert_tokenizer=bert_tokenizer)
