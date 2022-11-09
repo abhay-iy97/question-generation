@@ -3,14 +3,15 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 from Chimera.Infrastructure.Core import Core
-from Chimera.DataLoad.Preprocessor import *
+from Chimera.DataLoad.Preprocessor import Preprocessor
 
 class ChimeraDataset(Dataset):
     def __init__(self, df):
         columns = ['context', 'question', 'answer', 'generated_qn'] #todo col names from config?
         if not all([c in df.columns for c in columns]):
             Core.logger.Error('dataset does not comply with the needed format')
-        df = Prepro(df)
+        prepro = Preprocessor()
+        df = prepro.Prepro(df)
         self.df: pd.DataFrame = df
 
     @staticmethod

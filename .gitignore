@@ -134,3 +134,4 @@ dmypy.json
 .idea*
 IGND/out
 IGND/out*
+Chimera/Data/val_dataset.csv
