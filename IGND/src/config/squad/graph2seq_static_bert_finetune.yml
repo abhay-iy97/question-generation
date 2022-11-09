@@ -1,18 +1,22 @@
 # Data
-dataset_name: 'squad-split2'
-trainset: '../data/squad-split2/train_sent_pre.v5.json'
-devset: '../data/squad-split2/dev_sent_pre.v5.json'
-testset: '../data/squad-split2/test_sent_pre.v5.json'
-pretrained_word_embed_file: null
-wmd_emb_file: '../data/squad-split2/glove_vectors.w2v'
-saved_vocab_file: '../data/squad-split2/vocab_model_70k'
-pretrained: '../out/squad-split2/graph2seq_static_bert_finetune_new28'
+dataset_name: 'squad'
 
-only_test: True
+pretrained_word_embed_file: null
+
+trainset: ./dataset/train-v1.1-processed.json
+devset: ./dataset/dev-v1.1-processed.json
+testset: ./dataset/dev-v1.1-processed.json
+# pretrained_word_embed_file: null
+wmd_emb_file: ./dataset/squad/glove_vectors.w2v
+saved_vocab_file: ./dataset/squad/vocab_model_70k.bin
+# pretrained: ./dataset/squad/graph2seq_static_bert_finetune_rl_fixed_ratio_0.99_lr_0.00001_new_new.json
+pretrained: null
 
 # Output
-out_dir: '../out/squad-split2/graph2seq_static_bert_finetune_new30'
+out_dir: ./dataset/squad
 
+
+only_test: True
 gpt2: False
 nll_type_sum: False
 

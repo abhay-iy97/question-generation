@@ -17,7 +17,7 @@ class WhitespaceTokenizer(object):
         spaces = [True] * len(words)
         return Doc(self.vocab, words=words, spaces=spaces)
 
-nlp = spacy.load('en')
+nlp = spacy.load('en_core_web_sm')
 nlp.tokenizer = WhitespaceTokenizer(nlp.vocab)
 
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     args = vars(parser.parse_args())
 
     with open(args['input']) as dataset_file:
-        dataset = json.load(dataset_file, encoding='utf-8')
+        dataset = json.load(dataset_file)
 
         all_instances = []
         for instance in tqdm(dataset):

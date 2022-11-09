@@ -12,6 +12,7 @@ import numpy as np
 from scipy.sparse import *
 from collections import Counter, defaultdict
 from .timer import Timer
+from tqdm import tqdm
 
 from .bert_utils import *
 from . import padding_utils
@@ -134,6 +135,8 @@ def vectorize_input(batch, config, bert_model, training=True, device=None):
 
 def prepare_datasets(config):
     if config['trainset'] is not None:
+        import os
+        print(os.getcwd())
         train_set, train_src_len, train_tgt_len, train_ans_len = read_all_GenerationDatasets(config['trainset'], isLower=True)
         print('# of training examples: {}'.format(len(train_set)))
         print('Training source sentence length: {}'.format(train_src_len))
@@ -165,7 +168,7 @@ def prepare_datasets(config):
 
 def read_all_GenerationDatasets(inpath, isLower=True):
     with open(inpath) as dataset_file:
-        dataset = json.load(dataset_file, encoding='utf-8')
+        dataset = json.load(dataset_file)
     all_instances = []
     src_len = []
     tgt_len = []
@@ -225,7 +228,7 @@ class QADataStream(object):
         # distribute questions into different buckets
         batch_spans = padding_utils.make_batches(self.num_instances, batch_size)
         self.batches = []
-        for batch_index, (batch_start, batch_end) in enumerate(batch_spans):
+        for batch_index, (batch_start, batch_end) in tqdm(enumerate(batch_spans)):
             cur_instances = all_instances[batch_start: batch_end]
             cur_batch = QAQuestionBatch(cur_instances, config, word_vocab, edge_vocab,
                     POS_vocab=POS_vocab, NER_vocab=NER_vocab, ext_vocab=ext_vocab, bert_tokenizer=bert_tokenizer)
@@ -583,8 +586,9 @@ class OOVDict(object):
         self.ext_vocab_size = max(self.ext_vocab_size, index + 1)
         return index
 
-
+import nltk
 from nltk.corpus import stopwords
+nltk.download('stopwords', quiet=True)
 stopWords = set(stopwords.words('english'))
 def is_copied(word, target):
     if word in target and word not in stopWords:
