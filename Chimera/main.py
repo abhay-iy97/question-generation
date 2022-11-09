@@ -1,8 +1,7 @@
 
-from Infrastructure.Config.Config import FromArgs
-from Infrastructure.Core import FromConfig
-config = FromArgs()
-FromConfig(config)
+from Infrastructure.Config.ArgResolver import ArgResolver
+argResolver = ArgResolver()
+config = argResolver.Parse()
 
 from DataLoad.ChimeraDataset import ChimeraDataset
 from DataLoad.DataLoader import DataLoader
