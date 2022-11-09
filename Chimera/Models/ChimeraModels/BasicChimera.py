@@ -7,5 +7,5 @@ class BasicChimera(Module, Core.ConfigType):
                            hidden_size= self.hidden_size,
                            num_layers= self.num_layers) #todo add to config
 
-    def forward(self, x):
-        return self.network(x)
+    def forward(self, x, h):
+        return self.network(x, h)
