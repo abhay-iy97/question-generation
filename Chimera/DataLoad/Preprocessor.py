@@ -15,7 +15,7 @@ class Preprocessor(Core.ConfigType):
 
     def Prepro(self, df):
         df['context'] = self.ApplyContextPrepro(df['context'])
-        self.Embedding(df)
+        return self.Embedding(df)
 
     def ApplyContextPrepro(self, context: DataFrame):
         return context.apply(lambda s: re.sub('[^a-zA-Z]+', '', s))

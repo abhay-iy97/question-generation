@@ -15,10 +15,8 @@ class ArgResolver:
     def Parse(self):
         self.parser.add_argument('-c', '--config', dest='configPath', default='Chimera/Infrastructure/Config/config.json')
         self.parser.add_argument('-d', '--data-path', dest='dataPath', default='Chimera/Data/sample_dataset.csv')
-        self.parser.add_argument('--base_config', dest='baseConfigPath', default='Chimera/Infrastructre/Config/config')
+        self.parser.add_argument('--base_config', dest='baseConfigPath', default='Chimera/Infrastructure/Config/config.json')
         args = self.parser.parse_args()
-        config = FromJsonFile(args.configPath)
-        baseConfig = FromJsonFile(args.baseConfigPath)
         config = {**FromJsonFile(args.baseConfigPath), **FromJsonFile(args.configPath)}
         config['data_path'] = args.dataPath
         self.config = config

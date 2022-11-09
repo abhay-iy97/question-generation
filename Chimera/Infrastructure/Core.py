@@ -13,6 +13,7 @@ def FromConfig(config):
     optInjection = {'explict' : ExplicitConfigInjector, 'implicit' : ImplicitConfigInjector, 'static' : StaticConfigInjector}
     Core.logger = logger
     Core.ConfigType = optInjection.get(config['config_type'], StaticConfigInjector)
+    ConfigInjectorBase.config = config
     Core.ConfigType.Initialize()
 
 
