@@ -1,12 +1,12 @@
 # Data
 dataset_name: 'squad'
 
-pretrained_word_embed_file: null
-
 trainset: ./dataset/train-v1.1-processed.json
 devset: ./dataset/dev-v1.1-processed.json
-testset: ./dataset/dev-v1.1-processed.json
-# pretrained_word_embed_file: null
+# testset: ./dataset/dev-v1.1-processed.json
+testset: null
+
+pretrained_word_embed_file: null
 wmd_emb_file: ./dataset/squad/glove_vectors.w2v
 saved_vocab_file: ./dataset/squad/vocab_model_70k.bin
 # pretrained: ./dataset/squad/graph2seq_static_bert_finetune_rl_fixed_ratio_0.99_lr_0.00001_new_new.json

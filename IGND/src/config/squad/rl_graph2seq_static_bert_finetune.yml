@@ -3,7 +3,9 @@ dataset_name: squad
 
 trainset: ./dataset/train-v1.1-processed.json
 devset: ./dataset/dev-v1.1-processed.json
-testset: ./dataset/dev-v1.1-processed.json
+# testset: ./dataset/dev-v1.1-processed.json
+testset: null
+
 # pretrained_word_embed_file: null
 wmd_emb_file: ./dataset/squad/glove_vectors.w2v
 saved_vocab_file: ./dataset/squad/vocab_model_70k.bin
