@@ -5,6 +5,7 @@ import unicodedata
 import pandas as pd
 from collections import defaultdict
 from nltk.tokenize import word_tokenize
+from config import EOS_TOKEN
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -18,14 +19,6 @@ def read_dataset(path: str) -> pd.DataFrame:
     print(
         f'Number of records in the dataset after removing NaN values: {len(df)}')
     return df
-
-
-# SOS_token = "<SOS>"
-# EOS_token = "<EOS>"
-SEP_token = "<SEP>"
-
-SOS_token = 0
-EOS_token = 1
 
 
 class Lang:
@@ -67,7 +60,7 @@ def indexesFromSentence(lang, sentence):
 def tensorFromSentence(lang, sentence):
     indexes = indexesFromSentence(lang, sentence)
     # indexes.append(lang.word2index[EOS_token])
-    indexes.append(EOS_token)
+    indexes.append(EOS_TOKEN)
     return torch.tensor(indexes, dtype=torch.long, device=device).view(-1, 1)
 
 

@@ -1,98 +1,28 @@
 from tqdm import tqdm
-from io import open
 import pandas as pd
-import unicodedata
-import string
-import re
 import random
 import time
 import torch
 import torch.nn as nn
 from torch import optim
-import torch.nn.functional as F
 
-from utils import Lang, read_dataset, SOS_token, EOS_token, SEP_token, timeSince, tensorsFromPair
+from model import AttnDecoderRNN, EncoderRNN, DecoderRNN
+from config import (
+    DATASET_PATH,
+    MODEL_SAVE_PATH,
+    MAX_LENGTH,
+    TEACHER_FORCING_RATIO,
+    SOS_TOKEN,
+    EOS_TOKEN
+)
+from utils import (
+    Lang,
+    read_dataset,
+    timeSince,
+    tensorsFromPair
+)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-DATASET_PATH = "datasets/merged_dataset.csv"
-MAX_LENGTH = 50
-teacher_forcing_ratio = 0.5
-MODEL_SAVE_PATH = "./model/enc_dec.bin"
-
-
-class EncoderRNN(nn.Module):
-    def __init__(self, input_size: int, hidden_size: int):
-        super(EncoderRNN, self).__init__()
-        self.hidden_size = hidden_size
-        self.embedding = nn.Embedding(input_size, hidden_size)
-        self.gru = nn.GRU(hidden_size, hidden_size)
-
-    def forward(self, input, hidden):
-        embedded = self.embedding(input).view(1, 1, -1)
-        output = embedded
-        output, hidden = self.gru(output, hidden)
-        return output, hidden
-
-    def initHidden(self):
-        return torch.zeros(1, 1, self.hidden_size, device=device)
-
-
-class DecoderRNN(nn.Module):
-    def __init__(self, hidden_size: int, output_size: int):
-        super(DecoderRNN, self).__init__()
-        self.hidden_size = hidden_size
-        self.embedding = nn.Embedding(output_size, hidden_size)
-        self.gru = nn.GRU(hidden_size, hidden_size)
-        self.out = nn.Linear(hidden_size, output_size)
-        self.softmax = nn.LogSoftmax(dim=1)
-
-    def forward(self, input, hidden):
-        output = self.embedding(input).view(1, 1, -1)
-        output = F.relu(output)
-        output, hidden = self.gru(output, hidden)
-        output = self.softmax(self.out(output[0]))
-        return output, hidden
-
-    def initHidden(self):
-        return torch.zeros(1, 1, self.hidden_size, device=device)
-
-
-class AttnDecoderRNN(nn.Module):
-    def __init__(self, hidden_size, output_size, dropout_p=0.1, max_length=MAX_LENGTH):
-        super(AttnDecoderRNN, self).__init__()
-        self.hidden_size = hidden_size
-        self.output_size = output_size
-        self.dropout_p = dropout_p
-        self.max_length = max_length
-
-        self.embedding = nn.Embedding(self.output_size, self.hidden_size)
-        self.attn = nn.Linear(self.hidden_size * 2, self.max_length)
-        self.attn_combine = nn.Linear(self.hidden_size * 2, self.hidden_size)
-        self.dropout = nn.Dropout(self.dropout_p)
-        self.gru = nn.GRU(self.hidden_size, self.hidden_size)
-        self.out = nn.Linear(self.hidden_size, self.output_size)
-
-    def forward(self, input, hidden, encoder_outputs):
-        embedded = self.embedding(input).view(1, 1, -1)
-        embedded = self.dropout(embedded)
-
-        attn_weights = F.softmax(
-            self.attn(torch.cat((embedded[0], hidden[0]), 1)), dim=1)
-        attn_applied = torch.bmm(attn_weights.unsqueeze(0),
-                                 encoder_outputs.unsqueeze(0))
-
-        output = torch.cat((embedded[0], attn_applied[0]), 1)
-        output = self.attn_combine(output).unsqueeze(0)
-
-        output = F.relu(output)
-        output, hidden = self.gru(output, hidden)
-
-        output = F.log_softmax(self.out(output[0]), dim=1)
-        return output, hidden, attn_weights
-
-    def initHidden(self):
-        return torch.zeros(1, 1, self.hidden_size, device=device)
 
 
 def prepare_data(df: pd.DataFrame) -> Lang:
@@ -123,11 +53,11 @@ def train(input_tensor, target_tensor, encoder, decoder, encoder_optimizer, deco
             input_tensor[ei], encoder_hidden)
         encoder_outputs[ei] = encoder_output[0, 0]
 
-    decoder_input = torch.tensor([[SOS_token]], device=device)
+    decoder_input = torch.tensor([[SOS_TOKEN]], device=device)
 
     decoder_hidden = encoder_hidden
 
-    use_teacher_forcing = True if random.random() < teacher_forcing_ratio else False
+    use_teacher_forcing = True if random.random() < TEACHER_FORCING_RATIO else False
 
     if use_teacher_forcing:
         # Teacher forcing: Feed the target as the next input
@@ -146,7 +76,7 @@ def train(input_tensor, target_tensor, encoder, decoder, encoder_optimizer, deco
             decoder_input = topi.squeeze().detach()  # detach from history as input
 
             loss += criterion(decoder_output, target_tensor[di])
-            if decoder_input.item() == EOS_token:
+            if decoder_input.item() == EOS_TOKEN:
                 break
 
     loss.backward()
@@ -196,7 +126,7 @@ def trainIters(encoder, decoder, n_iters, df, lang, print_every=1000, plot_every
 
 
 if __name__ == "__main__":
-    df: pd.DataFrame = read_dataset(DATASET_PATH)
+    df: pd.DataFrame = read_dataset(DATASET_PATH)[:5]
     print(f'device: {device}')
     lang = prepare_data(df)
     hidden_size = 256
