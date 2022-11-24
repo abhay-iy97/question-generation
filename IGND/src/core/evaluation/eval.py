@@ -14,7 +14,7 @@ __author__ = 'xinya'
 from .bleu.bleu import Bleu
 from .meteor.meteor import Meteor
 from .rouge.rouge import Rouge
-from .cider.cider import Cider
+# from .cider.cider import Cider
 from collections import defaultdict
 from gensim.models import KeyedVectors
 

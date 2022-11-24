@@ -13,10 +13,12 @@ class DummyLogger(object):
             self.dirname = pretrained
         else:
             self.dirname = dirname
-            if os.path.exists(dirname):
-                raise Exception('Directory already exists: {}'.format(dirname))
-            os.makedirs(dirname)
-            os.mkdir(os.path.join(dirname, 'metrics'))
+            if not os.path.exists(dirname):
+                # raise Exception('Directory already exists: {}'.format(dirname))
+                os.makedirs(dirname)
+            if not os.path.exists(os.path.join(dirname, 'metrics')):
+                os.mkdir(os.path.join(dirname, 'metrics'))
+
             self.log_json(config, os.path.join(self.dirname, Constants._CONFIG_FILE))
         if config['logging']:
             self.f_metric = open(os.path.join(self.dirname, 'metrics', 'metrics.log'), 'a')

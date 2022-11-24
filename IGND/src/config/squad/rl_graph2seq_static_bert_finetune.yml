@@ -1,22 +1,29 @@
 # Data
-dataset_name: 'squad-split2'
-trainset: '../data/squad-split2/train_sent_pre.v5.json'
-devset: '../data/squad-split2/dev_sent_pre.v5.json'
-testset: '../data/squad-split2/test_sent_pre.v5.json'
-pretrained_word_embed_file: null
-wmd_emb_file: '../data/squad-split2/glove_vectors.w2v'
-saved_vocab_file: '../data/squad-split2/vocab_model_70k'
-pretrained: '../out/squad-split2/graph2seq_static_bert_finetune_rl_fixed_ratio_0.99_lr_0.00001_new_new'
+dataset_name: squad
+
+trainset: ./dataset/train-v1.1-processed.json
+devset: ./dataset/dev-v1.1-processed.json
+# testset: ./dataset/dev-v1.1-processed.json
+testset: null
+
+# pretrained_word_embed_file: null
+wmd_emb_file: ./dataset/squad/glove_vectors.w2v
+saved_vocab_file: ./dataset/squad/vocab_model_70k.bin
+# pretrained: ./dataset/squad/graph2seq_static_bert_finetune_rl_fixed_ratio_0.99_lr_0.00001_new_new.json
+pretrained: null
 
 # Output
-out_dir: null
+out_dir: ./dataset/squad
 
+
+nll_type_sum: False
+gpt2: False
 
 # Preprocessing
 top_word_vocab: 70000
 min_word_freq: 1
 max_dec_steps: 41 # Including the EOS symbol
-
+rl_wmd_ratio: 0
 
 # Model architecture
 model_name: 'graph2seq'
@@ -30,9 +37,14 @@ f_pos: True # POS feature
 f_ner: True # NER feature
 f_freq: False # frequency feature
 f_dep: False # Dependency feature
+f_bio: True
 f_ans: True
+f_tag: True
+graph_decoder: True
 case_embed_dim: 3
 pos_embed_dim: 12
+bio_embed_dim: 3
+tag_embed_dim: 3
 ner_embed_dim: 8
 freq_embed_dim: 3
 edge_embed_dim: 12
@@ -107,7 +119,7 @@ eary_stop_metric: 'Bleu_4'
 
 random_seed: 1234
 shuffle: True # Whether to shuffle the examples during training
-max_epochs: 200
+max_epochs: 1
 batch_size: 25 # No. of dialogs per batch
 patience: 10
 verbose: 1000 # Print every X batches
@@ -130,7 +142,7 @@ test_batch_size: 25
 out_len_in_words: False # Only for beam search
 out_predictions: True # Whether to output predictions
 save_params: True # Whether to save params
-logging: True # Turn it off for Codalab
+logging: False # Turn it off for Codalab
 
 # Beam search
 beam_size: 5
