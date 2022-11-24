@@ -2,9 +2,11 @@ import time
 import math
 import torch
 import unicodedata
+from typing import Tuple
 import pandas as pd
 from collections import defaultdict
 from nltk.tokenize import word_tokenize
+from sklearn.model_selection import train_test_split
 from config import EOS_TOKEN
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -82,3 +84,9 @@ def timeSince(since, percent):
     es = s / (percent)
     rs = es - s
     return '%s (- %s)' % (asMinutes(s), asMinutes(rs))
+
+
+def split_dataset(dataset: pd.DataFrame, test_ratio: int) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    train, test = train_test_split(
+        dataset, test_size=test_ratio, random_state=42)
+    return train, test

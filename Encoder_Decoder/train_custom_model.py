@@ -13,13 +13,17 @@ from config import (
     MAX_LENGTH,
     TEACHER_FORCING_RATIO,
     SOS_TOKEN,
-    EOS_TOKEN
+    EOS_TOKEN,
+    HIDDEN_SIZE,
+    NUM_OF_ITERATIONS,
+    DROPOUT
 )
 from utils import (
     Lang,
     read_dataset,
     timeSince,
-    tensorsFromPair
+    tensorsFromPair,
+    split_dataset
 )
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -126,11 +130,14 @@ def trainIters(encoder, decoder, n_iters, df, lang, print_every=1000, plot_every
 
 
 if __name__ == "__main__":
-    df: pd.DataFrame = read_dataset(DATASET_PATH)[:5]
+    df: pd.DataFrame = read_dataset(DATASET_PATH)
+    train_df, test_df = split_dataset(df, test_ratio=0.2)
+    train_df, val_df = split_dataset(train_df, test_ratio=0.1)
     print(f'device: {device}')
-    lang = prepare_data(df)
-    hidden_size = 256
-    encoder1 = EncoderRNN(lang.n_words, hidden_size).to(device)
+    lang = prepare_data(pd.concat([train_df, val_df], ignore_index=True))
+    # hidden_size = 256
+    encoder1 = EncoderRNN(lang.n_words, HIDDEN_SIZE).to(device)
     attn_decoder1 = AttnDecoderRNN(
-        hidden_size, lang.n_words, dropout_p=0.1).to(device)
-    trainIters(encoder1, attn_decoder1, 75000, df, lang, print_every=5000)
+        HIDDEN_SIZE, lang.n_words, dropout_p=DROPOUT).to(device)
+    trainIters(encoder1, attn_decoder1, NUM_OF_ITERATIONS,
+               train_df, lang, print_every=5000)
