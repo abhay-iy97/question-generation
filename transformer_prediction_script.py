@@ -3,6 +3,7 @@
 import re
 import pandas as pd
 from tqdm import tqdm
+from nltk import word_tokenize
 from transformers import AutoModelWithLMHead, AutoTokenizer
 from nltk.translate.bleu_score import corpus_bleu
 from rouge import Rouge
@@ -66,6 +67,12 @@ def calculate_scores(dataset: pd.DataFrame, csv_save_path: str) -> None:
     dataset['pred_1'], dataset['pred_2'], dataset['pred_3'] = prediction_results.values()
     dataset = dataset.dropna()
     dataset.to_csv(csv_save_path)
+    for col in ['question', 'pred_1', 'pred_2', 'pred_3']:
+        if col == 'question':
+            dataset[col] = dataset[col].apply(lambda x: [word_tokenize(x)])
+        else:
+            dataset[col] = dataset[col].apply(lambda x: word_tokenize(x))
+
     print("Results:\n")
     for key in rouge_scores.keys():
         print(f"\nRouge Score ({key}): ", rouge_scores[key]/len(dataset))
