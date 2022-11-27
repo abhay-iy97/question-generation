@@ -56,7 +56,7 @@ class Lang:
 #         if unicodedata.category(c) != 'Mn'
 #     )
 def indexesFromSentence(lang, sentence):
-    return [lang.word2index[word] for word in word_tokenize(sentence)]
+    return [lang.word2index.get(word, 0) for word in word_tokenize(sentence)]
 
 
 def tensorFromSentence(lang, sentence):
