@@ -135,3 +135,5 @@ dmypy.json
 IGND/out
 IGND/out*
 Chimera/Data/val_dataset.csv
+Encoder_Decoder/datasets/merged_dataset.csv
+Encoder_Decoder/model/enc_dec.bin
